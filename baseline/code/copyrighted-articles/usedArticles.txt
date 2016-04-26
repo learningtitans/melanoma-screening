@@ -1,0 +1,18 @@
+[1] T. Wadhawan, N. Situ, K. Lancaster, X. Yuan and G. Zouridakis, "SkinScan©: A portable library for melanoma detection on handheld devices," 2011 IEEE International Symposium on Biomedical Imaging: From Nano to Macro, Chicago, IL, 2011, pp. 133-136.
+doi: 10.1109/ISBI.2011.5872372
+keywords: {biomedical telemetry;body area networks;cancer;health care;medical image processing;mobile radio;patient diagnosis;skin;Apple iPhone 4;SkinScan;desktop computers;emote area;handheld devices;health care delivery;image processing algorithms;melanoma detection;portable library;skin cancer detection;skin diseases;smart phones;underserved area;Feature extraction;Image segmentation;Lesions;Libraries;Malignant tumors;Smart phones;Training;Skin cancer detection;handheld device;melanoma screening;smartphone},
+URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5872372&isnumber=5872340
+
+[2] T. F. Chan and L. A. Vese, "Active contours without edges," in IEEE Transactions on Image Processing, vol. 10, no. 2, pp. 266-277, Feb 2001.
+doi: 10.1109/83.902291
+keywords: {finite difference methods;functional equations;image segmentation;object detection;Mumford-Shah functional;active contours;curve evolution;experimental results;finite differences;image segmentation;initial curve;level sets;mean-curvature flow;minimal partition problem;numerical algorithm;object detection;stopping term;Active contours;Finite difference methods;Helium;Image edge detection;Image segmentation;Level set;Mathematics;Object detection;Partial differential equations;Two-term control},
+URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=902291&isnumber=19508
+
+[3] N. Situ, X. Yuan, J. Chen and G. Zouridakis, "Malignant melanoma detection by Bag-of-Features classification," 2008 30th Annual International Conference of the IEEE Engineering in Medicine and Biology Society, Vancouver, BC, 2008, pp. 3110-3113.
+doi: 10.1109/IEMBS.2008.4649862
+keywords: {Cancer;Costs;Histograms;Lesions;Malignant tumors;Microscopy;Skin;Support vector machine classification;Support vector machines;Training data;Algorithms;Bayes Theorem;Cluster Analysis;False Positive Reactions;Humans;Image Interpretation, Computer-Assisted;Markov Chains;Melanoma;Models, Statistical;Nevus;Pattern Recognition, Automated;ROC Curve;Reproducibility of Results;Skin Neoplasms},
+URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4649862&isnumber=4649055
+
+[4] Xiaojing Yuan, Ning Situ, George Zouridakis, A narrow band graph partitioning method for skin lesion segmentation, Pattern Recognition, Volume 42, Issue 6, June 2009, Pages 1017-1028, ISSN 0031-3203, http://dx.doi.org/10.1016/j.patcog.2008.09.006.
+(http://www.sciencedirect.com/science/article/pii/S0031320308003786)
+Keywords: Automatic skin lesion segmentation; Melanoma detection; Border detection; Active contour; Snake; Narrow band energy
