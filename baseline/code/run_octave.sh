@@ -1,0 +1,1 @@
+octave --no-gui --eval "skinScan('../datasets/atlas/folds.gitnot/michel-spsr/michel-spsr_train_1.csv', '../datasets/atlas/All_Flat.gitnot/', '../datasets/atlas/cache.gitnot/', 'results.gitnot/michel-spsr_train_1_scores.txt', 'results.gitnot/michel-spsr_train_1_codebook.txt', 'results.gitnot/michel-spsr_train_1_features.svm', 'train', 3)"
