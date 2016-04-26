@@ -25,9 +25,9 @@ create_directories() {
 
 skinScan() {
 	case "$experiment" in
-		lmh) $dir_matlab -nodisplay -nodesktop -nosplash -r "run_matlab('$dir_dataset','lmh')" ;;
-		lmplus) $dir_matlab -nodisplay -nodesktop -nosplash -r "run_matlab('$dir_dataset','lmplus')" ;;
-		lm) $dir_matlab -nodisplay -nodesktop -nosplash -r "run_matlab('$dir_dataset','lm')" ;;
+		lmh) $dir_matlab -nodisplay -nodesktop -nosplash -r "code/run_matlab('../$dir_dataset','lmh')" ;;
+		lmplus) $dir_matlab -nodisplay -nodesktop -nosplash -r "code/run_matlab('../$dir_dataset','lmplus')" ;;
+		lm) $dir_matlab -nodisplay -nodesktop -nosplash -r "code/run_matlab('../$dir_dataset','lm')" ;;
 	esac
 }
 
