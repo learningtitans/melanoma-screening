@@ -20,14 +20,14 @@ show_arguments() {
 
 # Setup: create directories as needed
 create_directories() {
-	mkdir -p results.gitnot
+	mkdir -p code/results.gitnot
 }
 
 skinScan() {
 	case "$experiment" in
-		lmh) $dir_matlab -nodisplay -nodesktop -nosplash -r "code/run_matlab('../$dir_dataset','lmh')" ;;
-		lmplus) $dir_matlab -nodisplay -nodesktop -nosplash -r "code/run_matlab('../$dir_dataset','lmplus')" ;;
-		lm) $dir_matlab -nodisplay -nodesktop -nosplash -r "code/run_matlab('../$dir_dataset','lm')" ;;
+		lmh) $dir_matlab -nodisplay -nodesktop -nosplash -r "experiment='lmh';datasetFolder='../$dir_dataset';run code/run_matlab.m;exit" ;;
+		lmplus) $dir_matlab -nodisplay -nodesktop -nosplash -r "experiment='lmplus';datasetFolder='../$dir_dataset';run code/run_matlab.m;exit" ;;
+		lm) $dir_matlab -nodisplay -nodesktop -nosplash -r "experiment='lm';datasetFolder='../$dir_dataset';run code/run_matlab.m;exit" ;;
 	esac
 }
 
