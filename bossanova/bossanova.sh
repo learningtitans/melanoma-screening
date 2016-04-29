@@ -4,6 +4,8 @@
 # They are set with the values described at the original paper. If you want to change them the 
 # final results may be different than the reported ones. More details about each variable can 
 # be found at the 'help' of each subprogram.
+folds_number="1 2 3 4 5 6 7 8 9 10"
+
 java_memory=12G		# Memory allocated by Java
 
 low_level_sift_step=[8]
@@ -73,7 +75,7 @@ create_directories() {
 	mkdir -p folds_aux
 	mkdir -p ${dir_lowlevel}/sifts
 	mkdir -p ${dir_highlevel}/${experiment}
-	for i in {1..10}
+	for i in $folds_number
 	do
 		mkdir -p ${dir_lowlevel}/pcas/${experiment}/fold${i}
 		mkdir -p ${dir_midlevel}/${experiment}/fold${i}
@@ -95,7 +97,7 @@ low_level() {
 	echo "$(tput setaf 2)Step 1. RootSIFT extraction...: DONE! "
 	
 	echo "$(tput setaf 2)Step 2. Sampling descriptors...$(tput sgr 0)"
-	for i in {1..10}
+	for i in $folds_number
 	do
 		if [ -f ${dir_lowlevel}/samples_${experiment}_fold${i}.obj ] ; then 
 			echo "${dir_lowlevel}/samples_${experiment}_fold${i}.obj exists. Not creating it again." 
@@ -106,7 +108,7 @@ low_level() {
 	echo "$(tput setaf 2)Step 2. Sampling descriptors...: DONE!$(tput sgr 0)"
 	
 	echo "$(tput setaf 2)Step 3. Applying PCA...$(tput sgr 0)"
-	for i in {1..10}
+	for i in $folds_number
 	do
 		java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/PCA.jar -i ./folds_aux/BossaNova_SIFT_${experiment}_train_${i}.txt -o ${dir_lowlevel}/pcas/${experiment}/fold${i}/ -d ${low_level_pca_dimension} -l ${dir_lowlevel}/samples_${experiment}_fold${i}.obj  
 		java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/PCA.jar -i ./folds_aux/BossaNova_SIFT_${experiment}_test_${i}.txt -o ${dir_lowlevel}/pcas/${experiment}/fold${i}/ -d ${low_level_pca_dimension} -l ${dir_lowlevel}/samples_${experiment}_fold${i}.obj   
@@ -117,7 +119,7 @@ low_level() {
 # Create codebooks
 create_codebooks() {
 	echo "$(tput setaf 2)Step 4. Creating codebooks...$(tput sgr 0)"
-	for i in {1..10}
+	for i in $folds_number
 	do
 		if [ -f ${dir_lowlevel}/codebook_${experiment}_fold${i}.obj ] ; then 
 			echo "${dir_lowlevel}/codebook_${experiment}_fold${i}.obj exists. Not creating it again." 
@@ -131,7 +133,7 @@ create_codebooks() {
 # Mid-level extraction (BossaNova)
 mid_level() {	
 	echo "$(tput setaf 2)Step 5. Starting mid-level extraction...$(tput sgr 0)"
-	for i in {1..10}
+	for i in $folds_number
 	do
 		java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/BossaNova.jar -i ./folds_aux/BossaNova_PCA_${experiment}_train_${i}.txt -o ${dir_midlevel}/${experiment}/fold${i}/ -c ${dir_lowlevel}/codebook_${experiment}_fold${i}.obj -b ${mid_level_bossanova_numberOfBins} -a ${mid_level_bossanova_alphas} -k 10 -n pnl2 -concat -f 1 -s ${mid_level_bossanova_scalesOfSpatialPyramids}   
 		java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/BossaNova.jar -i ./folds_aux/BossaNova_PCA_${experiment}_test_${i}.txt -o ${dir_midlevel}/${experiment}/fold${i}/ -c ${dir_lowlevel}/codebook_${experiment}_fold${i}.obj -b ${mid_level_bossanova_numberOfBins} -a ${mid_level_bossanova_alphas} -k 10 -n pnl2 -concat -f 1 -s ${mid_level_bossanova_scalesOfSpatialPyramids} 	
@@ -142,7 +144,7 @@ mid_level() {
 # Create high-level features (inputs to LibSVM)
 high_level() {
 	echo "$(tput setaf 2)Step 6. Starting high-level extraction... $(tput sgr 0)"
-	for i in {1..10}
+	for i in $folds_number
 	do
 		java -jar ./code/CreateHighLevel.jar ${dir_midlevel} ${dir_highlevel} ${experiment} ${dir_dataset}/folds/${experiment}/${experiment}_train_${i}.csv
 		java -jar ./code/CreateHighLevel.jar ${dir_midlevel} ${dir_highlevel} ${experiment} ${dir_dataset}/folds/${experiment}/${experiment}_test_${i}.csv
@@ -153,7 +155,7 @@ high_level() {
 # Classification step via LibSVM
 classification() {
 	echo "$(tput setaf 2)Step 7. Classification: this can take a long time... $(tput sgr 0)"
-	for i in {1..10}
+	for i in $folds_number
 	do
 		python ../resources/easy_titans.py ${dir_highlevel}/${experiment}/${experiment}_train_${i}.svm ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm
 	done
