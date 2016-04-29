@@ -146,8 +146,8 @@ high_level() {
 	echo "$(tput setaf 2)Step 6. Starting high-level extraction... $(tput sgr 0)"
 	for i in $folds_number
 	do
-		java -jar ./code/CreateHighLevel.jar ${dir_midlevel} ${dir_highlevel} ${experiment} ${dir_dataset}/folds/${experiment}/${experiment}_train_${i}.csv
-		java -jar ./code/CreateHighLevel.jar ${dir_midlevel} ${dir_highlevel} ${experiment} ${dir_dataset}/folds/${experiment}/${experiment}_test_${i}.csv
+		java -jar ./code/CreateHighLevel.jar ${dir_midlevel} ${dir_highlevel} ${experiment} ${i} ${dir_dataset}/folds/${experiment}/${experiment}_train_${i}.csv
+		java -jar ./code/CreateHighLevel.jar ${dir_midlevel} ${dir_highlevel} ${experiment} ${i} ${dir_dataset}/folds/${experiment}/${experiment}_test_${i}.csv
 	done
 	echo "$(tput setaf 2)Step 6. High-level extraction...: DONE! $(tput sgr 0)"
 }
