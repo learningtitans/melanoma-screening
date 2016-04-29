@@ -91,7 +91,7 @@ create_fold_files() {
 # Low-level extraction (RootSIFT ; Sampling ; PCA)
 low_level() {
 	echo "$(tput setaf 2)Step 1. RootSIFT extraction...$(tput sgr 0)"
-	echo -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/ROOT-SIFTExtraction.jar -i ${dir_dataset}/images -o ${dir_lowlevel}/sifts/ -sift vldsift -step ${low_level_sift_step} -size ${low_level_sift_size} -fast -floatdescriptors -rootsift -m ${path_matlab} -v ${path_vlfeat} 
+	java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/ROOT-SIFTExtraction.jar -i ${dir_dataset}/images -o ${dir_lowlevel}/sifts/ -sift vldsift -step ${low_level_sift_step} -size ${low_level_sift_size} -fast -floatdescriptors -rootsift -m ${path_matlab} -v ${path_vlfeat} 
 	echo "$(tput setaf 2)Step 1. RootSIFT extraction...: DONE! "
 	
 	echo "$(tput setaf 2)Step 2. Sampling descriptors...$(tput sgr 0)"
@@ -100,7 +100,7 @@ low_level() {
 		if [ -f ${dir_lowlevel}/samples_${experiment}_fold${i}.obj ] ; then 
 			echo "${dir_lowlevel}/samples_${experiment}_fold${i}.obj exists. Not creating it again." 
 		else
-			echo -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/SampleDescriptors.jar -i ./folds_aux/BossaNova_SIFT_${experiment}_train_${i}.txt -o ${dir_lowlevel}/samples_${experiment}_fold${i}.obj -m ${low_level_sampling_sampledPointsNumber} -p ${low_level_sampling_sampledPointsPerImageNumber}  
+			java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/SampleDescriptors.jar -i ./folds_aux/BossaNova_SIFT_${experiment}_train_${i}.txt -o ${dir_lowlevel}/samples_${experiment}_fold${i}.obj -m ${low_level_sampling_sampledPointsNumber} -p ${low_level_sampling_sampledPointsPerImageNumber}  
 		fi	
 	done
 	echo "$(tput setaf 2)Step 2. Sampling descriptors...: DONE!$(tput sgr 0)"
@@ -108,8 +108,8 @@ low_level() {
 	echo "$(tput setaf 2)Step 3. Applying PCA...$(tput sgr 0)"
 	for i in {1..10}
 	do
-		echo -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/PCA.jar -i ./folds_aux/BossaNova_SIFT_${experiment}_train_${i}.txt -o ${dir_lowlevel}/pcas/${experiment}/fold${i}/ -d ${low_level_pca_dimension} -l ${dir_lowlevel}/samples_${experiment}_fold${i}.obj  
-		echo -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/PCA.jar -i ./folds_aux/BossaNova_SIFT_${experiment}_test_${i}.txt -o ${dir_lowlevel}/pcas/${experiment}/fold${i}/ -d ${low_level_pca_dimension} -l ${dir_lowlevel}/samples_${experiment}_fold${i}.obj   
+		java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/PCA.jar -i ./folds_aux/BossaNova_SIFT_${experiment}_train_${i}.txt -o ${dir_lowlevel}/pcas/${experiment}/fold${i}/ -d ${low_level_pca_dimension} -l ${dir_lowlevel}/samples_${experiment}_fold${i}.obj  
+		java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/PCA.jar -i ./folds_aux/BossaNova_SIFT_${experiment}_test_${i}.txt -o ${dir_lowlevel}/pcas/${experiment}/fold${i}/ -d ${low_level_pca_dimension} -l ${dir_lowlevel}/samples_${experiment}_fold${i}.obj   
 	done	
 	echo "$(tput setaf 2)Step 3. Applying PCA...: DONE!$(tput sgr 0)"
 }
@@ -122,7 +122,7 @@ create_codebooks() {
 		if [ -f ${dir_lowlevel}/codebook_${experiment}_fold${i}.obj ] ; then 
 			echo "${dir_lowlevel}/codebook_${experiment}_fold${i}.obj exists. Not creating it again." 
 		else 	
-			echo -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/CodeBook-1it.jar -i ./folds_aux/BossaNova_PCA_${experiment}_train_${i}.txt -n ${codebook_size} -m ${low_level_sampling_sampledPointsNumber} -p ${low_level_sampling_sampledPointsPerImageNumber} -o ${dir_lowlevel}/codebook_${experiment}_fold${i}.obj 
+			java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/CodeBook-1it.jar -i ./folds_aux/BossaNova_PCA_${experiment}_train_${i}.txt -n ${codebook_size} -m ${low_level_sampling_sampledPointsNumber} -p ${low_level_sampling_sampledPointsPerImageNumber} -o ${dir_lowlevel}/codebook_${experiment}_fold${i}.obj 
 		fi
 	done
 	echo "$(tput setaf 2)Step 4. Creating codebooks...: DONE!$(tput sgr 0)"
@@ -133,8 +133,8 @@ mid_level() {
 	echo "$(tput setaf 2)Step 5. Starting mid-level extraction...$(tput sgr 0)"
 	for i in {1..10}
 	do
-		echo -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/BossaNova.jar -i ./folds_aux/BossaNova_PCA_${experiment}_train_${i}.txt -o ${dir_midlevel}/${experiment}/fold${i}/ -c ${dir_lowlevel}/codebook_${experiment}_fold${i}.obj -b ${mid_level_bossanova_numberOfBins} -a ${mid_level_bossanova_alphas} -k 10 -n pnl2 -concat -f 1 -s ${mid_level_bossanova_scalesOfSpatialPyramids}   
-		echo -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/BossaNova.jar -i ./folds_aux/BossaNova_PCA_${experiment}_test_${i}.txt -o ${dir_midlevel}/${experiment}/fold${i}/ -c ${dir_lowlevel}/codebook_${experiment}_fold${i}.obj -b ${mid_level_bossanova_numberOfBins} -a ${mid_level_bossanova_alphas} -k 10 -n pnl2 -concat -f 1 -s ${mid_level_bossanova_scalesOfSpatialPyramids} 	
+		java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/BossaNova.jar -i ./folds_aux/BossaNova_PCA_${experiment}_train_${i}.txt -o ${dir_midlevel}/${experiment}/fold${i}/ -c ${dir_lowlevel}/codebook_${experiment}_fold${i}.obj -b ${mid_level_bossanova_numberOfBins} -a ${mid_level_bossanova_alphas} -k 10 -n pnl2 -concat -f 1 -s ${mid_level_bossanova_scalesOfSpatialPyramids}   
+		java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/BossaNova.jar -i ./folds_aux/BossaNova_PCA_${experiment}_test_${i}.txt -o ${dir_midlevel}/${experiment}/fold${i}/ -c ${dir_lowlevel}/codebook_${experiment}_fold${i}.obj -b ${mid_level_bossanova_numberOfBins} -a ${mid_level_bossanova_alphas} -k 10 -n pnl2 -concat -f 1 -s ${mid_level_bossanova_scalesOfSpatialPyramids} 	
 	done
 	echo "$(tput setaf 2)Step 5. Mid-level extraction...: DONE! $(tput sgr 0)"
 }
@@ -144,8 +144,8 @@ high_level() {
 	echo "$(tput setaf 2)Step 6. Starting high-level extraction... $(tput sgr 0)"
 	for i in {1..10}
 	do
-		echo -jar ./code/CreateHighLevel.jar ${dir_midlevel} ${dir_highlevel} ${experiment} ${dir_dataset}/folds/${experiment}/${experiment}_train_${i}.csv
-		echo -jar ./code/CreateHighLevel.jar ${dir_midlevel} ${dir_highlevel} ${experiment} ${dir_dataset}/folds/${experiment}/${experiment}_test_${i}.csv
+		java -jar ./code/CreateHighLevel.jar ${dir_midlevel} ${dir_highlevel} ${experiment} ${dir_dataset}/folds/${experiment}/${experiment}_train_${i}.csv
+		java -jar ./code/CreateHighLevel.jar ${dir_midlevel} ${dir_highlevel} ${experiment} ${dir_dataset}/folds/${experiment}/${experiment}_test_${i}.csv
 	done
 	echo "$(tput setaf 2)Step 6. High-level extraction...: DONE! $(tput sgr 0)"
 }

@@ -17,7 +17,7 @@
 # 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Notes: 
-#	"easy.py" is distributed under a ‘modified BSD license’. For details, 
+#	"easy.py" is distributed under a 'modified BSD license'. For details, 
 #	please check http://www.csie.ntu.edu.tw/~cjlin/libsvm/COPYRIGHT
 #	
 #	This is a slightly changed version of the original "easy.py" tool. 
