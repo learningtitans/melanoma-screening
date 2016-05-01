@@ -128,7 +128,7 @@ function [ ] = skinScan( inFoldFile, inImageDir, inoutCacheDir, inoutScoresFile,
 
     % finds codebook and computes midlevel by hard assignment and sum-pooling
     % ... coding (assignment)
-    if strcmp(trainOrTest, 'train')
+    if strcmp(trainOrTest, 'train') && exist( inoutCodebookFile, 'file' ) == 0
         nFeatures = size(featuresMatrix, 1);
         nSample = max(floor(nFeatures*KmeansSample), KmeansMinSample);
         nSample = min(nSample, nFeatures);

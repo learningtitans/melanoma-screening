@@ -1,4 +1,3 @@
-==============
 INSTALLATION
 
 Dependencies :
@@ -46,7 +45,4 @@ Dependencies :
    Then, from Octave console type :
    pkg install path/to/file-version.tar.gz
 
-
-==============
-RUNNING
 
