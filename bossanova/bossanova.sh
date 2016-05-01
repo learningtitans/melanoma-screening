@@ -157,17 +157,18 @@ classification() {
 	echo "$(tput setaf 2)Step 7. Classification: this can take a long time... $(tput sgr 0)"
 	for i in $folds_number
 	do
-		python ../resources/easy_titans.py ${dir_highlevel}/${experiment}/${experiment}_train_${i}.svm ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm
+		python ../resources/libsvm-2.9_titans/tools/easy_titans.py ${dir_highlevel}/${experiment}/${experiment}_train_${i}.svm ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm
 	done
 	echo "$(tput setaf 2)Step 7. Classification: DONE! $(tput sgr 0)"
 }
 
 # Calculate AUC
 calculate_auc() {	
-	echo "$(tput setaf 2)Step 8. Calculating AUC... $(tput sgr 0)"
-	
-	echo "T O D O !"
-	
+	echo "$(tput setaf 2)Step 8. Calculating AUC: one fold per row... $(tput sgr 0)"
+	for i in $folds_number
+	do
+		../resources/libsvm-2.9_titans/svm-predict ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm ${dir_highlevel}/${experiment}/${experiment}_train_${i}.svm.model ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm.predict
+	done
 	echo "$(tput setaf 2)Step 8. Calculating AUC...: DONE! $(tput sgr 0)"
 }
 
