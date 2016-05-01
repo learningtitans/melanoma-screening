@@ -57,34 +57,25 @@ skinScan() {
 		"${path_matlab}" -nodisplay -nodesktop -nosplash -r "skinScan('${dir_dataset}/folds/${experiment}/${experiment}_test_${i}.csv' , '${dir_dataset}/images/', '../features/', '../results/${experiment}_train_${i}_scores', '../results/${experiment}_train_${i}_codebook', '../results/${experiment}_test_${i}_features.svm' , 'test' , 6, 1); exit"       
 		cd ..
 	done
-	# case "$experiment" in
-		# lmh) $path_matlab -nodisplay -nodesktop -nosplash -r "experiment='lmh';datasetFolder='../$dir_dataset';run code/run_matlab.m;exit" ;;
-		# lmplus) $path_matlab -nodisplay -nodesktop -nosplash -r "experiment='lmplus';datasetFolder='../$dir_dataset';run code/run_matlab.m;exit" ;;
-		# lm) $path_matlab -nodisplay -nodesktop -nosplash -r "experiment='lm';datasetFolder='../$dir_dataset';run code/run_matlab.m;exit" ;;
-		# teste) $path_matlab -nodisplay -nodesktop -nosplash -r "experiment='teste';datasetFolder='../$dir_dataset';run code/run_matlab.m;exit" ;;
-		#TODO: retirar teste do script
-	# esac
 	echo "$(tput setaf 2)Step 1. Applying skinScan algorithm...: DONE! "
 }
 
-# TODO : FIX ME!
 # Classification step via LibSVM
 classification() {
 	echo "$(tput setaf 2)Step 2. Classification: this can take a long time... $(tput sgr 0)"
 	for i in $folds_number
-	do
-		python ../resources/libsvm-2.9_titans/tools/easy_titans.py code/results/${experiment}/${experiment}_train_${i}.svm ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm
+	do	
+		python ../resources/libsvm-2.9_titans/tools/easy_titans.py ./results/${experiment}_train_${i}_features.svm ./results/${experiment}_test_${i}_features.svm 
 	done
 	echo "$(tput setaf 2)Step 2. Classification: DONE! $(tput sgr 0)"
 }
 
-# TODO : FIX ME!
 # Calculate AUC
 calculate_auc() {	
 	echo "$(tput setaf 2)Step 3. Calculating AUC: one fold per row... $(tput sgr 0)"
 	for i in $folds_number
 	do
-		../resources/libsvm-2.9_titans/svm-predict ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm ${dir_highlevel}/${experiment}/${experiment}_train_${i}.svm.model ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm.predict
+		../resources/libsvm-2.9_titans/svm-predict ./results/${experiment}_test_${i}_features.svm.scale ./results/${experiment}_train_${i}_features.svm.model ./results/${experiment}_test_${i}_features.svm.predict 
 	done
 	echo "$(tput setaf 2)Step 3. Calculating AUC...: DONE! $(tput sgr 0)"
 }
@@ -124,8 +115,8 @@ create_directories
 skinScan
 
 # Classification & results (AUCs)
-#classification
-#calculate_auc
+classification
+calculate_auc
 
 # End of baseline script
 echo ""

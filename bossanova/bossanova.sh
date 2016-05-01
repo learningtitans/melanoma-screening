@@ -167,7 +167,7 @@ calculate_auc() {
 	echo "$(tput setaf 2)Step 8. Calculating AUC: one fold per row... $(tput sgr 0)"
 	for i in $folds_number
 	do
-		../resources/libsvm-2.9_titans/svm-predict ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm ${dir_highlevel}/${experiment}/${experiment}_train_${i}.svm.model ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm.predict
+		../resources/libsvm-2.9_titans/svm-predict ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm.scale ${dir_highlevel}/${experiment}/${experiment}_train_${i}.svm.model ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm.predict
 	done
 	echo "$(tput setaf 2)Step 8. Calculating AUC...: DONE! $(tput sgr 0)"
 }
