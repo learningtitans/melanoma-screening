@@ -52,8 +52,8 @@ skinScan() {
 	echo "$(tput setaf 2)Step 1. Applying skinScan algorithm...$(tput sgr 0)"
 	for i in $folds_number
 	do
-		"${path_matlab}" -nodisplay -nodesktop -nosplash -r "skinScan(${dir_dataset}/folds/${experiment}/${experiment}_train_${i}.csv, ${dir_dataset}/images/, ./features/, ./results/${experiment}_train_${i}_scores, ./results/${experiment}_train_${i}_codebook, ./results/${experiment}_train_${i}_features.svm, 'train', 6, 1); exit"  
-		"${path_matlab}" -nodisplay -nodesktop -nosplash -r "skinScan(${dir_dataset}/folds/${experiment}/${experiment}_test_${i}.csv, ${dir_dataset}/images/, ./features/, ./results/${experiment}_train_${i}_scores, ./results/${experiment}_train_${i}_codebook, ./results/${experiment}_test_${i}_features.svm, 'test', 6, 1)); exit"       
+		"${path_matlab}" -nodisplay -nodesktop -nosplash -r "run ./code/skinScan('${dir_dataset}/folds/${experiment}/${experiment}_train_${i}.csv', '${dir_dataset}/images/', './features/', './results/${experiment}_train_${i}_scores', './results/${experiment}_train_${i}_codebook', './results/${experiment}_train_${i}_features.svm', 'train', 6, 1); exit"  
+		"${path_matlab}" -nodisplay -nodesktop -nosplash -r "run ./code/skinScan('${dir_dataset}/folds/${experiment}/${experiment}_test_${i}.csv', '${dir_dataset}/images/', './features/', './results/${experiment}_train_${i}_scores', './results/${experiment}_train_${i}_codebook', './results/${experiment}_test_${i}_features.svm', 'test', 6, 1)); exit"       
 	done
 	# case "$experiment" in
 		# lmh) $path_matlab -nodisplay -nodesktop -nosplash -r "experiment='lmh';datasetFolder='../$dir_dataset';run code/run_matlab.m;exit" ;;
