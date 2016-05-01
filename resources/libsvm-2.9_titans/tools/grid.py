@@ -17,7 +17,7 @@ else:
 
 is_win32 = (sys.platform == 'win32')
 if not is_win32:
-       svmtrain_exe = "../svm-train"
+       svmtrain_exe = "../resources/libsvm-2.9_titans/svm-train"
        gnuplot_exe = "/usr/bin/gnuplot"
 else:
        # example for windows
