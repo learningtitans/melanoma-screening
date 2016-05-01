@@ -165,10 +165,9 @@ classification() {
 # Calculate AUC
 calculate_auc() {	
 	echo "$(tput setaf 2)Step 8. Calculating AUC... $(tput sgr 0)"
-	chmod +x ../resources/auc.sh
 	for i in $folds_number
 	do
-		../resources/auc.sh ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm ${dir_highlevel}/${experiment}/${experiment}_train_${i}.svm.model ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm.predict
+		../resources/libsvm-2.9_titans/svm-predict ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm ${dir_highlevel}/${experiment}/${experiment}_train_${i}.svm.model ${dir_highlevel}/${experiment}/${experiment}_test_${i}.svm.predict
 	done
 	echo "$(tput setaf 2)Step 8. Calculating AUC...: DONE! $(tput sgr 0)"
 }

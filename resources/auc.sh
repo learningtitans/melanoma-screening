@@ -1,3 +1,3 @@
 #!/bin/sh
 
-../../resources/libsvm-2.9_titans/svm-predict $1 $2 $3
+./libsvm-2.9_titans/svm-predict $1 $2 $3
