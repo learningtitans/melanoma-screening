@@ -128,19 +128,23 @@ function [ ] = skinScan( inFoldFile, inImageDir, inoutCacheDir, inoutScoresFile,
 
     % finds codebook and computes midlevel by hard assignment and sum-pooling
     % ... coding (assignment)
-    if strcmp(trainOrTest, 'train') && exist( strcat( inoutCodebookFile, '.mat' ), 'file' ) == 0
-        nFeatures = size(featuresMatrix, 1);
-        nSample = max(floor(nFeatures*KmeansSample), KmeansMinSample);
-        nSample = min(nSample, nFeatures);
-        nSample = min(nSample, KmeansMaxSample);
-        sample = randperm(nFeatures, nSample);
-        sampled = featuresMatrix(sample,:);
-        logprint(sprintf('Training codebook in sample of %d features from total of %d...', nSample, nFeatures), 2);
-        [ assignments, centroids ] = ...
-            kmeans( sampled, CodebookSize, 'MaxIter', KmeansIterations );
-        save( inoutCodebookFile, 'centroids' );
-        sample = []; % for the sake of memory footprint
-        sampled = [];
+    if strcmp(trainOrTest, 'train')
+		if exist( strcat( inoutCodebookFile, '.mat' ), 'file' ) == 2
+			logprint(sprintf('...codebook cached, reading %s', inoutCodebookFile), 3); 
+		else 
+			nFeatures = size(featuresMatrix, 1);
+			nSample = max(floor(nFeatures*KmeansSample), KmeansMinSample);
+			nSample = min(nSample, nFeatures);
+			nSample = min(nSample, KmeansMaxSample);
+			sample = randperm(nFeatures, nSample);
+			sampled = featuresMatrix(sample,:);
+			logprint(sprintf('Training codebook in sample of %d features from total of %d...', nSample, nFeatures), 2);
+			[ assignments, centroids ] = ...
+				kmeans( sampled, CodebookSize, 'MaxIter', KmeansIterations );
+			save( inoutCodebookFile, 'centroids' );
+			sample = []; % for the sake of memory footprint
+			sampled = [];
+		end
     end
     logprint('Assigning codebook...', 2);
     centroids = load( inoutCodebookFile );
