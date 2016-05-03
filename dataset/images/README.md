@@ -1,4 +1,5 @@
 ABOUT THE DATASET USED ON THE EXPERIMENTS:
+==========================================
 
 	For the experiments described on this paper, we have employed the 
 	images of the "The Interactive Atlas of Dermoscopy" [1].
@@ -10,6 +11,7 @@ ABOUT THE DATASET USED ON THE EXPERIMENTS:
 	lesion: close-up clinical image and dermoscopic image. 
 	
 ABOUT THE DISTRIBUTION OF THE IMAGES:
+=====================================
 
 	The Atlas is a third part development protected by copyright. So, 
 	we cannot distribute the images in this repository. 
@@ -20,10 +22,12 @@ ABOUT THE DISTRIBUTION OF THE IMAGES:
 	humans and machines.
 	
 OUR CONTACT:
+============
 
 	Michel Fornaciali: michelfornaciali@gmail.com
 
 REFERENCES:	
+===========
 	
 	[1] Argenziano, G., Soyer, H. P., De Giorgi, V., Piccolo, D., Carli, P., & 
 	Delfino, M. (2002). Dermoscopy: a tutorial. EDRA, Medical Publishing & New 
