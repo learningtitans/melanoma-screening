@@ -3,10 +3,10 @@
 # VARIABLES. Please, note that the following variables are used along the BossaNova pipeline. 
 # They are set with the values described at the original paper. If you want to change them the 
 # final results may be different than the reported ones. More details about each variable can 
-# be found at the 'help' of each subprogram.
+# be found at the "help" of each subprogram.
 folds_number="1 2 3 4 5 6 7 8 9 10"
 
-java_memory=12G		# Memory allocated by Java
+java_memory=12G		# Memory allocated by Java. 
 
 low_level_sift_step=[8]
 low_level_sift_size=[3.0,6.5,14.5,32.0]

@@ -38,11 +38,11 @@ INSTALLATION:
 
 	Please, follow the download and installation guidelines of each dependency. 
 	
-	For LIBLINEAR and LIBSVM, it will be necessary to generate the executables 
-	through the command "make". Please, follow the guidelines at each README 
-	file and ignore the warning messages (if any). 
+	For LIBSVM, it will be necessary to generate the executables through the 
+	command "make". Please, follow the guidelines at each README file and 
+	ignore the warning messages (if any). 
 	
-	After generating the LIBLINEAR and LIBSVM executables, browse to the directory 
+	After generating the LIBSVM executables, browse to the directory 
 	[setup] and allow the execution of the script "1_enableExecutables.sh":
 
 		chmod +x 1_enableExecutables.sh
@@ -63,7 +63,11 @@ REPOSITORY CONTENTS:
 		images: 				directory to store the images of Baseline and BossaNova experiments. 
 		folds: 					directory containing the fold files of each validation protocol. 
 	deepTransfer: 				
-
+		datasets:				the folder to organize datasets for "deep + transfer" experiments.
+		resources:				stores the "deep + transfer" code dependencies. 
+		source:					"deep + transfer" source code. 
+		download_model.sh:		a script to download the VGG-M model file. 
+		READ_ME.txt:			an explanation about how to run the deep learning code
 	resources:					
 		libsvm-2.9_titans: 		a modified version of LIBSVM. See its README file for details. 
 	setup: 						
