@@ -56,8 +56,13 @@ function []=extract_features(layer)
 		features{i} = desc;
 		labels{i} = labelmap(image_name);
 	end
+	savedir = sprintf('../datasets/%s/desc', dataset_name);
+	if ~exist(savedir, 'dir')
+		fprintf('Output folder for image descriptions created at "%s".\n', savedir);
+		mkdir(savedir);
+	end
 	fprintf('Saving descriptor file... ');
-	save(sprintf('../datasets/%s/desc/%02d.desc.mat', dataset_name, layer), 'images', 'features', 'labels');
+	save(sprintf('%s/%02d.desc.mat', savedir, layer), 'images', 'features', 'labels');
 	fprintf('Done.\n');
 end
 
