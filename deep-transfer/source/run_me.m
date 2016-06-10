@@ -8,24 +8,35 @@ function []=run_me()
 
     fcommon = common;
 
-	[dataset_name, fold_group, layer, trn_set, trn_lbl, trn_nme, val_set, val_lbl, val_nme, tst_set, tst_lbl, tst_nme, nfolds, test_groups] = fcommon.load_dataset();
-	
+	[dataset_name, fold_group, layer, trn_set, trn_lbl, trn_nme, val_set, val_lbl, val_nme, tst_set, tst_lbl, tst_nme, nfolds, ftype, test_groups] = fcommon.load_dataset();
+
     valchosen = -1;
     subfolds = -1;
-    while valchosen < 1 || valchosen > 2,
-        fprintf('==============================\n');
-        fprintf('==== Validation selection ====\n');
-        fprintf('==============================\n');
-        fprintf('  1) Cross validation for test + fixed validation set (%d runs)\n', nfolds);
-        fprintf('  2) Cross validation for test + dynamic validation set (%d runs)\n', nfolds*(nfolds-1));
-        valchosen = input(sprintf('Choose [1-2]: '));
-        if valchosen == 1,
-            subfolds = nfolds;
-        elseif valchosen == 2,
-            subfolds = nfolds*(nfolds-1);
-        else,
-            fprintf('\nInvalid option. Please try again.\n\n');
+    if ftype{1}(1) == 0,
+        while valchosen < 1 || valchosen > 2,
+            fprintf('==============================\n');
+            fprintf('==== Validation selection ====\n');
+            fprintf('==============================\n');
+            fprintf('  1) Cross validation for test + fixed validation set (%d runs)\n', nfolds);
+            fprintf('  2) Cross validation for test + dynamic validation set (%d runs)\n', nfolds*(nfolds-1));
+            valchosen = input(sprintf('Choose [1-2]: '));
+            if valchosen == 1,
+                subfolds = nfolds;
+            elseif valchosen == 2,
+                subfolds = nfolds*(nfolds-1);
+            else,
+                fprintf('\nInvalid option. Please try again.\n\n');
+            end
         end
+        skipAUC = false;
+    else
+        skipAUC = 'K';
+        while (strcmp(upper(skipAUC), 'Y') == 0 && strcmp(upper(skipAUC), 'N') == 0),
+            skipAUC = input('Skip AUC tests ? (necessary for test sets without 2 classes) Y/N: ', 's');
+        end
+        skipAUC = strcmp(upper(skipAUC), 'Y');
+        valchosen = -1;
+        subfolds = nfolds;
     end
 
     % To output the scores, uncomment the following lines
@@ -51,7 +62,7 @@ function []=run_me()
     fprintf('Run;BestValidationScore;C;');
     if size(test_groups,1) > 0 && enable_full
         for i = 1:size(test_groups,1)
-            if nclasses == 2
+            if nclasses == 2 && ~skipAUC,
                 fprintf('Group;AUC;ACC;AP;Sensitivity;Specificity;');
             else
                 fprintf('Group;AP;ACC;Sensitivity;Specificity;');
@@ -59,13 +70,13 @@ function []=run_me()
         end
     end
     if enable_full
-        if nclasses == 2
+        if nclasses == 2 && ~skipAUC,
             fprintf('Group;AUC;ACC;AP;Sensitivity;Specificity;\n');
         else
             fprintf('Group;AP;ACC;Sensitivity;Specificity;\n');
         end
     else
-        if nclasses == 2
+        if nclasses == 2 && ~skipAUC,
             fprintf('Group;AUC;\n');
         else
             fprintf('Group;AP;\n');
@@ -79,13 +90,25 @@ function []=run_me()
         fprintf('%02d;', fold);
         cfoldindex = 1;
 
-        [trn_data, trn_labl, trn_name, val_data, val_labl, val_name, tst_data, tst_labl, tst_name, tst_index] = fcommon.load_subfold(valchosen, fold, nfolds, trn_set, trn_lbl, trn_nme, val_set, val_lbl, val_nme, tst_set, tst_lbl, tst_nme);
+        if ftype{1}(1) == 0,
+            [trn_data, trn_labl, trn_name, val_data, val_labl, val_name, tst_data, tst_labl, tst_name, tst_index] = fcommon.load_subfold(valchosen, fold, nfolds, trn_set, trn_lbl, trn_nme, val_set, val_lbl, val_nme, tst_set, tst_lbl, tst_nme);
+        else
+            trn_data = trn_set{fold};
+            trn_labl = trn_lbl{fold};
+            trn_name = trn_nme{fold};
+            val_data = val_set{fold};
+            val_labl = val_lbl{fold};
+            val_name = val_nme{fold};
+            tst_data = tst_set{fold};
+            tst_labl = tst_lbl{fold};
+            tst_name = tst_nme{fold};
+        end
 
-        prev = 0;
-        best_c = 0;
+        prev = -1;
+        best_c = 1;
         
         for c = c_grid
-            if nclasses == 2
+            if nclasses == 2 && ~skipAUC,
                 model = train(trn_labl, sparse(trn_data), sprintf('-q -c %f', c));
                 [predicted_labels, accuracy, scores] = predict(val_labl, sparse(val_data), model, '-q');
                 clearvars model;
@@ -117,11 +140,7 @@ function []=run_me()
         fulltrain_lbl = vertcat(trn_labl, val_labl);
         fulltrain_set = vertcat(trn_data, val_data);
 
-        if nclasses == 2
-            model = train(fulltrain_lbl, sparse(fulltrain_set), sprintf('-q -c %f', best_c));
-        else
-            model = train(fulltrain_lbl, sparse(fulltrain_set), sprintf('-q -c %f', best_c));
-        end
+        model = train(fulltrain_lbl, sparse(fulltrain_set), sprintf('-q -c %f', best_c));
         
 		if size(test_groups,1) > 0
 			total = [];
@@ -151,7 +170,7 @@ function []=run_me()
 				ap = fcommon.compute_class_AP(test_labels, scores);
 				[specificity,sensitivity] = calculate_specsens(test_labels, predicted_labels, 1);
                 if enable_full
-    				if nclasses == 2
+    				if nclasses == 2 && ~skipAUC,
     					[ign,ign,ign,auc] = perfcurve(test_labels, scores, 1);
     					fprintf('%s;%f;%f;%f;%f;%f;', char(key), auc, accuracy(1)/100.0, ap, sensitivity, specificity);
     				else
@@ -160,7 +179,7 @@ function []=run_me()
                 end
                 current_fold{cfoldindex} = char(key);
                 cfoldindex = cfoldindex + 1;
-                if nclasses == 2
+                if nclasses == 2 && ~skipAUC,
                     current_fold{cfoldindex} = auc;
                 else
                     current_fold{cfoldindex} = -1;
@@ -186,6 +205,7 @@ function []=run_me()
 			end
 		end
         test_labels = tst_labl;
+		
 		[predicted_labels, accuracy, scores] = predict(test_labels, sparse(tst_data), model, '-q');
 
         % To output the scores, uncomment the following line
@@ -194,14 +214,14 @@ function []=run_me()
 		ap = fcommon.compute_class_AP(tst_labl, scores);
 		[specificity,sensitivity] = calculate_specsens(tst_labl, predicted_labels, 1);
         if enable_full
-    		if nclasses == 2
+    		if nclasses == 2 && ~skipAUC,
     			[ign,ign,ign,auc] = perfcurve(tst_labl, scores, 1);
     			fprintf('all;%f;%f;%f;%f;%f;\n', auc, accuracy(1)/100.0, ap, sensitivity, specificity);
     		else
     			fprintf('all;%f;%f;%f;%f;\n', ap, accuracy(1)/100.0, sensitivity, specificity);
     		end
         else
-            if nclasses == 2
+            if nclasses == 2 && ~skipAUC,
                 [ign,ign,ign,auc] = perfcurve(tst_labl, scores, 1);
                 fprintf('all;%f;\n', auc);
             else
@@ -210,7 +230,7 @@ function []=run_me()
         end
         current_fold{cfoldindex} = 'all';
         cfoldindex = cfoldindex + 1;
-        if nclasses == 2
+        if nclasses == 2 && ~skipAUC,
             current_fold{cfoldindex} = auc;
         else
             current_fold{cfoldindex} = -1;
@@ -225,8 +245,10 @@ function []=run_me()
         current_fold{cfoldindex} = specificity;
         cfoldindex = cfoldindex + 1;
 
-        if isempty(selected_folds{tst_index,2}) || selected_folds{tst_index,2} < current_fold{2}
-            selected_folds(tst_index,:) = current_fold;
+        if ftype{1}(1) == 0,
+            if isempty(selected_folds{tst_index,2}) || selected_folds{tst_index,2} < current_fold{2}
+                selected_folds(tst_index,:) = current_fold;
+            end
         end
 
         clearvars model;
@@ -237,7 +259,7 @@ function []=run_me()
         fprintf('Fold;BestValidationScore;C;');
         if size(test_groups,1) > 0 && enable_full
             for i = range(size(test_groups,1))
-                if nclasses == 2
+                if nclasses == 2 && ~skipAUC,
                     fprintf('Group;AUC;ACC;AP;Sensitivity;Specificity;');
                 else
                     fprintf('Group;AP;ACC;Sensitivity;Specificity;');
@@ -245,13 +267,13 @@ function []=run_me()
             end
         end
         if enable_full
-            if nclasses == 2
+            if nclasses == 2 && ~skipAUC,
                 fprintf('Group;AUC;ACC;AP;Sensitivity;Specificity;\n');
             else
                 fprintf('Group;AP;ACC;Sensitivity;Specificity;\n');
             end
         else
-            if nclasses == 2
+            if nclasses == 2 && ~skipAUC,
                 fprintf('Group;AUC;\n');
             else
                 fprintf('Group;AP;\n');
@@ -263,7 +285,7 @@ function []=run_me()
             if size(test_groups,1) > 0
                 if enable_full
                     for i=1:size(test_groups,1)+1
-                        if nclasses == 2
+                        if nclasses == 2 && ~skipAUC,
                             fprintf('%s;%f;%f;%f;%f;%f;', selected_folds{fold,indx}, selected_folds{fold,indx+1}, selected_folds{fold,indx+2}, selected_folds{fold,indx+3}, selected_folds{fold,indx+4}, selected_folds{fold,indx+5});
                         else
                             fprintf('%s;%f;%f;%f;%f;', selected_folds{fold,indx}, selected_folds{fold,indx+2}, selected_folds{fold,indx+3}, selected_folds{fold,indx+4}, selected_folds{fold,indx+5});

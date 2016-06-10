@@ -58,7 +58,7 @@ function []=extract_features(layer)
 	end
 	savedir = sprintf('../datasets/%s/desc', dataset_name);
 	if ~exist(savedir, 'dir')
-		fprintf('Output folder for image descriptions created at "%s".\n', savedir);
+		fprintf('Output folder for image description created at "%s".\n', savedir);
 		mkdir(savedir);
 	end
 	fprintf('Saving descriptor file... ');
@@ -119,7 +119,7 @@ function [trn_set, trn_lbl, trn_nme, val_set, val_lbl, val_nme, tst_set, tst_lbl
 
 	fprintf('Done.\n\n');
 
-	if ftype{1}(1) == 0,
+	if ftype{1}(1) == 0 || ftype{1}(1) == 2,
 		[trn_set, trn_lbl, trn_nme, val_set, val_lbl, val_nme, tst_set, tst_lbl, tst_nme] = load_folds(images, features, labels, trn, val, tst, ftype, nfolds);
 	else
 		excp = MException('Runtime:fold_type_not_supported', sprintf('ERROR: Fold type (%d) not supported.\n', ftype{1}(1)));
@@ -166,7 +166,7 @@ function [trn_set, trn_lbl, trn_nme, val_set, val_lbl, val_nme, tst_set, tst_lbl
 		cpos = 1;
 		forsize = 0;
 		try
-			forsize = size(val{i},1)
+			forsize = size(val{i},1);
 		end
 		for img=1:forsize
 			[general_desc, general_labl] = load_image_desc(images, features, labels, val{i}(img));
@@ -187,7 +187,7 @@ function [trn_set, trn_lbl, trn_nme, val_set, val_lbl, val_nme, tst_set, tst_lbl
 		cpos = 1;
 		forsize = 0;
 		try
-			forsize = size(tst{i},1)
+			forsize = size(tst{i},1);
 		end
 		for img=1:forsize
 			[general_desc, general_labl] = load_image_desc(images, features, labels, tst{i}(img));
@@ -292,7 +292,7 @@ function [trn_data, trn_labl, trn_name, val_data, val_labl, val_name, tst_data, 
 	end
 end
 
-function [dataset_name, fold_group, layer, trn_set, trn_lbl, trn_nme, val_set, val_lbl, val_nme, tst_set, tst_lbl, tst_nme, nfolds, test_groups]=load_dataset()
+function [dataset_name, fold_group, layer, trn_set, trn_lbl, trn_nme, val_set, val_lbl, val_nme, tst_set, tst_lbl, tst_nme, nfolds, ftype, test_groups]=load_dataset()
 	[dataset_name, labelmap] = load_dataset_simple();
 	dataconf = dir(sprintf('../datasets/%s/folds', dataset_name));
 	isfolder = [dataconf(:).isdir];
