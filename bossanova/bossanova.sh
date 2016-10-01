@@ -73,6 +73,7 @@ show_arguments() {
 create_directories() {
 	echo "$(tput setaf 2)Creating auxiliary directories...$(tput sgr 0)"
 	mkdir -p folds_aux
+	mkdir -p ${dir_dataset}/images_100k
 	mkdir -p ${dir_lowlevel}/sifts
 	mkdir -p ${dir_highlevel}/${experiment}
 	for i in $folds_number
@@ -90,10 +91,17 @@ create_fold_files() {
 	echo "$(tput setaf 2)Creating auxiliary files...: DONE!$(tput sgr 0)"
 }
 
+# Preprocessing: all images are resized to 100K pixels, if larger
+preprocessing() {
+	echo "$(tput setaf 2)Step 0. Resizing images to 100K pixels...$(tput sgr 0)"
+	mogrify -path ${dir_dataset}/images_100k/ -resize 100000@ -format jpg ${dir_dataset}/images/*.jpg
+	echo "$(tput setaf 2)Step 0. Resizing images to 100K pixels...: DONE! $(tput sgr 0)"
+}
+
 # Low-level extraction (RootSIFT ; Sampling ; PCA)
 low_level() {
 	echo "$(tput setaf 2)Step 1. RootSIFT extraction...$(tput sgr 0)"
-	java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/ROOT-SIFTExtraction.jar -i ${dir_dataset}/images -o ${dir_lowlevel}/sifts/ -sift vldsift -step ${low_level_sift_step} -size ${low_level_sift_size} -fast -floatdescriptors -rootsift -m ${path_matlab} -v ${path_vlfeat} 
+	java -Xmx${java_memory} -client -XX:+UseParallelGC -XX:+UseParallelOldGC -jar ./code/ROOT-SIFTExtraction.jar -i ${dir_dataset}/images_100k -o ${dir_lowlevel}/sifts/ -sift vldsift -step ${low_level_sift_step} -size ${low_level_sift_size} -fast -floatdescriptors -rootsift -m ${path_matlab} -v ${path_vlfeat} 
 	echo "$(tput setaf 2)Step 1. RootSIFT extraction...: DONE! "
 	
 	echo "$(tput setaf 2)Step 2. Sampling descriptors...$(tput sgr 0)"
@@ -208,6 +216,9 @@ check_arguments
 show_arguments
 create_directories
 create_fold_files
+
+# Preprocessing
+preprocessing
 
 # Main pipeline
 low_level

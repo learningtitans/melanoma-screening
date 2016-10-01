@@ -17,14 +17,12 @@ ABOUT THE DISTRIBUTION OF THE IMAGES:
 	we cannot distribute the images in this repository. 
 
 	If you want to reproduce our experiments on this same dataset, 
-	please, acquire the Atlas at [http://dermoscopy.org/] and contact 
-	us in order to get the image annotations on readable format for 
-	humans and machines.
+	please, acquire the Atlas at [http://dermoscopy.org/] .
 	
 OUR CONTACT:
 ============
-
-	Michel Fornaciali: michelfornaciali@gmail.com
+	
+	In case of any problem or doubt, contact me: Michel Fornaciali - michelfornaciali@gmail.com
 
 REFERENCES:	
 ===========

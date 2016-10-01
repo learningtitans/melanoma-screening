@@ -26,6 +26,7 @@ DEPENDENCIES
 Note: we assume that the codes available here will be run on an 
 Unix OS. You will need: 
 
+ - [ImageMagick](http://www.imagemagick.org/script/index.php);
  - Matlab;
  - [VLFeat](http://www.vlfeat.org/install-matlab.html) for Matlab;
  - Java;
@@ -50,6 +51,17 @@ After generating the LIBSVM executables, browse to the directory
 Then, run the script. It will give execute permissions to all programs/scripts 
 in this repository. 
 
+RUNNING
+--------
+
+0) Preprocessing: run script "../resources/convertEDRAAtlas.sh" to copy the images from EDRA CD-ROM to the "../dataset/images" folder. It also removes the images' black frames (if any);
+
+1) Baseline: follow the usage indications provided by running "baseline.sh" without arguments;
+
+2) BossaNova: follow the usage indications provided by running "bossanova.sh" without arguments;
+
+3) Deep+Transfer: follow the instructions provided at the specific README file.
+
 REPOSITORY CONTENTS
 --------------------
 
@@ -59,8 +71,7 @@ REPOSITORY CONTENTS
 	bossanova: 					
 		code: 					BossaNova source code. 
 		bossanova.sh: 			main script to run experiments with BossaNova code. 
-	dataset:
-		images: 				directory to store the images of Baseline and BossaNova experiments. 
+	dataset:					directory to store the images of "Baseline" and "BossaNova" experiments. 
 		folds: 					directory containing the fold files of each validation protocol. 
 	deep-transfer: 				
 		datasets:				the folder to organize datasets for "deep + transfer" experiments.
@@ -70,16 +81,7 @@ REPOSITORY CONTENTS
 		READ_ME.txt:			an explanation about how to run the deep learning code
 	resources:					
 		libsvm-2.9_titans: 		a modified version of LIBSVM. See its README file for details. 
+		convertEDRAAtlas.sh:	script to preprocess (organize, convert and crop) the images from EDRA CD-ROM for the experiments of this paper.
 	setup: 						
 		1_enableExecutables.sh: script to setup the running environment. 
 	README.md:	 				this file; 
-
-RUNNING
---------
-
-1) Baseline: follow the usage indications provided by running "baseline.sh" without arguments;
-
-2) BossaNova: follow the usage indications provided by running "bossanova.sh" without arguments;
-
-3) Deep+Transfer: follow the instructions provided at the specific README file.
-

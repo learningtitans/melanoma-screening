@@ -65,6 +65,10 @@ left inside the datasets folder.
 
 And after that, you're ready to go!
 
+*IMPORTANT*: we have already prepared the dataset folder for this 
+paper, but you need to copy the images from "../dataset/images" 
+to "../deep-transfer/datasets/atlas/data". 
+
 #####################################################################
 #                      TRAINING ON MY DATASET                       #
 #####################################################################
